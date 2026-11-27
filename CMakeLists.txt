@@ -25,7 +25,7 @@ file(GLOB NFX_SRC "${CMAKE_SOURCE_DIR}/src/*.cpp")
 add_library(NITRO_FX SHARED ${NFX_SRC} ${SDK_SRC})
 set_target_properties(NITRO_FX PROPERTIES PREFIX "" SUFFIX ".asi" OUTPUT_NAME "NITRO_FX")
 target_include_directories(NITRO_FX PRIVATE
-  ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/include/nitrofx
+  ${CMAKE_SOURCE_DIR}/include
   ${PLUGIN_SDK_DIR}/plugin_sa ${PLUGIN_SDK_DIR}/plugin_sa/game_sa ${PLUGIN_SDK_DIR}/plugin_sa/game_sa/rw
   ${PLUGIN_SDK_DIR}/shared ${PLUGIN_SDK_DIR}/shared/game)
 target_compile_definitions(NITRO_FX PRIVATE GTASA PLUGIN_SGV_10US _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_DEPRECATE _USING_V110_SDK71_ NOMINMAX_UNUSED)
