@@ -41,7 +41,7 @@ target_include_directories(NITRO_FX PRIVATE
   ${PLUGIN_SDK_DIR}/plugin_sa ${PLUGIN_SDK_DIR}/plugin_sa/game_sa ${PLUGIN_SDK_DIR}/plugin_sa/game_sa/rw
   ${PLUGIN_SDK_DIR}/shared ${PLUGIN_SDK_DIR}/shared/game
   ${SDK_ENUM_DIRS})
-target_compile_definitions(NITRO_FX PRIVATE GTASA PLUGIN_SGV_10US _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_DEPRECATE _USING_V110_SDK71_ NOMINMAX_UNUSED)
+target_compile_definitions(NITRO_FX PRIVATE GTASA PLUGIN_SGV_10US RW _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_DEPRECATE _USING_V110_SDK71_ NOMINMAX_UNUSED)
 if(MSVC)
   target_compile_options(NITRO_FX PRIVATE /MP /permissive /W3 /wd4244 /wd4305 /wd4838 /wd4996 /wd4267 /wd4018)
 endif()
