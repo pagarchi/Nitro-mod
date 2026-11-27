@@ -15,7 +15,7 @@ static void SetState(RwRaster* ras) {
     RS(rwRENDERSTATETEXTUREFILTER, rwFILTERLINEAR);
 }
 static void Vtx(RwIm2DVertex& v, float x, float y, Col c, float u = 0, float vv = 0) {
-    v.x = x * SXs(); v.y = y * SYs(); v.z = RwIm2DGetNearScreenZ(); v.rhw = 1.0f / RwCameraGetNearClipPlane(Scene.m_pRwCamera);
+    v.x = x * SXs(); v.y = y * SYs(); v.z = RwIm2DGetNearScreenZ(); v.rhw = 1.0f / RwCameraGetNearClipPlane(*(RwCamera**)0xC1703C);
     v.emissiveColor = Pack(c); v.u = u; v.v = vv;
 }
 void Begin() { gBatch.clear(); gBatch.reserve(1024); gAdd = false; }
