@@ -18,6 +18,8 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")  # stati
 # Plugin-SDK sources are compiled directly (no prebuilt plugin.lib needed).
 file(GLOB_RECURSE SDK_SRC "${PLUGIN_SDK_DIR}/plugin_sa/*.cpp" "${PLUGIN_SDK_DIR}/shared/*.cpp")
 list(FILTER SDK_SRC EXCLUDE REGEX "/(examples|tools|imgui|bass|d3d9|d3dx9)/")
+# Optional SDK modules that need external libs (BASS / D3DX) and are not used by this mod.
+list(FILTER SDK_SRC EXCLUDE REGEX "/(Audio|Shader)\\.cpp$")
 list(LENGTH SDK_SRC SDK_SRC_COUNT)
 message(STATUS "plugin-sdk sources found: ${SDK_SRC_COUNT}")
 
