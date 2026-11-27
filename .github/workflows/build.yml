@@ -1,0 +1,42 @@
+name: Build NITRO FX (GTA SA 1.0 US, Win32)
+on:
+  push: { branches: [ main, master ] }
+  pull_request:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch Plugin-SDK
+        shell: pwsh
+        run: |
+          git clone --depth 1 https://github.com/DK22Pac/plugin-sdk.git "$env:RUNNER_TEMP\plugin-sdk"
+          "PLUGIN_SDK_DIR=$env:RUNNER_TEMP\plugin-sdk" | Out-File -FilePath $env:GITHUB_ENV -Append
+          git -C "$env:RUNNER_TEMP\plugin-sdk" log -1 --format="plugin-sdk commit: %H"
+          Get-ChildItem "$env:RUNNER_TEMP\plugin-sdk" -Directory | Select-Object -ExpandProperty Name   # layout diagnostics
+      - name: Configure (Win32)
+        shell: pwsh
+        run: cmake -S . -B build -A Win32 -DPLUGIN_SDK_DIR="$env:PLUGIN_SDK_DIR"
+      - name: Build
+        shell: pwsh
+        run: cmake --build build --config Release --parallel
+      - name: Package
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist | Out-Null
+          Copy-Item build\Release\NITRO_FX.asi dist\
+          Copy-Item INSTALLATION.md, README.md dist\
+          Compress-Archive -Path dist\* -DestinationPath NITRO_FX_release.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NITRO_FX
+          path: |
+            dist/NITRO_FX.asi
+            NITRO_FX_release.zip
+  host-tests:                      # fast logic tests (no GTA / Plugin-SDK needed); independent of the Win32 build job above
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Logic + MeshPick(mock) tests
+        run: sh tests/run_tests.sh
