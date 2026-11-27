@@ -21,13 +21,26 @@ list(FILTER SDK_SRC EXCLUDE REGEX "/(examples|tools|imgui|bass|d3d9|d3dx9)/")
 list(LENGTH SDK_SRC SDK_SRC_COUNT)
 message(STATUS "plugin-sdk sources found: ${SDK_SRC_COUNT}")
 
+# Enum headers (eWeaponType.h, eEntityType.h, ...) may live in a sub-folder of the SDK: locate them automatically.
+set(SDK_ENUM_DIRS "")
+foreach(_h eWeaponType.h eEntityType.h eAbortPriority.h eRadioID.h eModelID.h ePedType.h eTaskType.h eCrimeType.h eAnimBlendCallbackType.h eClothesModelPart.h)
+  file(GLOB_RECURSE _found "${PLUGIN_SDK_DIR}/plugin_sa/${_h}" "${PLUGIN_SDK_DIR}/shared/${_h}")
+  foreach(_f ${_found})
+    get_filename_component(_d "${_f}" DIRECTORY)
+    list(APPEND SDK_ENUM_DIRS "${_d}")
+  endforeach()
+endforeach()
+list(REMOVE_DUPLICATES SDK_ENUM_DIRS)
+message(STATUS "plugin-sdk enum header dirs: ${SDK_ENUM_DIRS}")
+
 file(GLOB NFX_SRC "${CMAKE_SOURCE_DIR}/src/*.cpp")
 add_library(NITRO_FX SHARED ${NFX_SRC} ${SDK_SRC})
 set_target_properties(NITRO_FX PROPERTIES PREFIX "" SUFFIX ".asi" OUTPUT_NAME "NITRO_FX")
 target_include_directories(NITRO_FX PRIVATE
   ${CMAKE_SOURCE_DIR}/include
   ${PLUGIN_SDK_DIR}/plugin_sa ${PLUGIN_SDK_DIR}/plugin_sa/game_sa ${PLUGIN_SDK_DIR}/plugin_sa/game_sa/rw
-  ${PLUGIN_SDK_DIR}/shared ${PLUGIN_SDK_DIR}/shared/game)
+  ${PLUGIN_SDK_DIR}/shared ${PLUGIN_SDK_DIR}/shared/game
+  ${SDK_ENUM_DIRS})
 target_compile_definitions(NITRO_FX PRIVATE GTASA PLUGIN_SGV_10US _CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_DEPRECATE _USING_V110_SDK71_ NOMINMAX_UNUSED)
 if(MSVC)
   target_compile_options(NITRO_FX PRIVATE /MP /permissive /W3 /wd4244 /wd4305 /wd4838 /wd4996 /wd4267 /wd4018)
