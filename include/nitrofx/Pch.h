@@ -11,6 +11,7 @@
 #include "CSprite.h"
 #include "CTimer.h"
 #include "CModelInfo.h"
+#include "CScene.h"
 #include "RenderWare.h"
 #include <vector>
 #include <string>
